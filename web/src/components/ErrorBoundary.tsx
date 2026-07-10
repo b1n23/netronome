@@ -4,6 +4,7 @@
  */
 
 import { Component, ErrorInfo, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/Button";
 
 interface Props {
@@ -29,23 +30,29 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-          <div className="text-center">
-            <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
-              Something went wrong
-            </h1>
-            <Button
-              variant="link"
-              onClick={() => window.location.reload()}
-            >
-              Reload page
-            </Button>
-          </div>
-        </div>
-      );
+      return <ErrorFallback />;
     }
 
     return this.props.children;
   }
+}
+
+function ErrorFallback() {
+  const { t } = useTranslation();
+  
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
+      <div className="text-center">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+          {t('errors:something_went_wrong', 'Something went wrong')}
+        </h1>
+        <Button
+          variant="link"
+          onClick={() => window.location.reload()}
+        >
+          {t('errors:reload_page', 'Reload page')}
+        </Button>
+      </div>
+    </div>
+  );
 }

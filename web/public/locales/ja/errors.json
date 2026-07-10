@@ -1,0 +1,9 @@
+{
+  "network_error": "ネットワークエラーが発生しました",
+  "server_error": "サーバーエラーが発生しました",
+  "not_found": "リソースが見つかりません",
+  "validation_error": "検証エラー",
+  "unknown_error": "不明なエラーが発生しました",
+  "something_went_wrong": "問題が発生しました",
+  "reload_page": "ページを再読み込み"
+}

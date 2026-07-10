@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import {
   AreaChart,
   Area,
@@ -72,13 +73,7 @@ interface VisibleMetrics {
   jitter: boolean;
 }
 
-const timeRangeOptions: { value: TimeRange; label: string }[] = [
-  { value: "1d", label: "24 Hours" },
-  { value: "3d", label: "3 Days" },
-  { value: "1w", label: "1 Week" },
-  { value: "1m", label: "1 Month" },
-  { value: "all", label: "All Time" },
-];
+// Moved timeRangeOptions inside component to support translations
 
 const ChartSkeleton: React.FC = () => (
   <motion.div
@@ -129,7 +124,16 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
   multipleServerDisplayMode: propMultipleServerDisplayMode,
   onMultipleServerDisplayModeChange,
 }) => {
+  const { t } = useTranslation();
   const isMobile = useIsMobile();
+
+  const timeRangeOptions: { value: TimeRange; label: string }[] = useMemo(() => [
+    { value: "1d", label: t('speedtest:24_hours') },
+    { value: "3d", label: t('speedtest:3_days') },
+    { value: "1w", label: t('speedtest:1_week') },
+    { value: "1m", label: t('speedtest:1_month') },
+    { value: "all", label: t('speedtest:all_time') },
+  ], [t]);
 
   const [visibleMetrics, setVisibleMetrics] = useState<VisibleMetrics>(() => {
     const saved = localStorage.getItem("speedtest-visible-metrics");
@@ -860,7 +864,7 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
                   </div>
                 )}
                 <h2 className="text-gray-900 dark:text-white text-lg sm:text-xl font-semibold p-1 select-none">
-                  Speedtest History
+                  {t('speedtest:speedtest_history')}
                 </h2>
               </div>
               <div className="p-1 -m-1">
@@ -979,7 +983,7 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
                   <div className="hidden sm:flex sm:justify-end sm:-mt-12 sm:gap-3">
                     {/* Server Filter Controls */}
                     <div className="flex items-center gap-3">
-                      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">Server:</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400 font-medium">{t('speedtest:server')}:</span>
                       
                       {/* Server Selection Dropdown */}
                       <Select
@@ -987,11 +991,11 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
                         onValueChange={handleServerDropdownChange}
                       >
                         <SelectTrigger className="w-[180px] px-3 py-1.5 text-xs">
-                          <SelectValue placeholder="Select servers..." />
+                          <SelectValue placeholder={t('speedtest:select_servers_placeholder')} />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="all">All servers</SelectItem>
-                          <SelectItem value="multiple">Select multiple...</SelectItem>
+                          <SelectItem value="all">{t('speedtest:all_servers')}</SelectItem>
+                          <SelectItem value="multiple">{t('speedtest:select_multiple')}</SelectItem>
                           {availableServers.map((server) => (
                             <SelectItem key={server.id} value={server.id}>
                               {server.name}
@@ -1142,20 +1146,19 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
                       >
                         <div className="text-center">
                           <h3 className="text-gray-900 dark:text-white text-lg font-medium mb-2">
-                            No tests in the last{" "}
+                            {t('speedtest:no_tests_in')}{" "}
                             {timeRange === "1d"
-                              ? "24 hours"
+                              ? t('speedtest:time_24h')
                               : timeRange === "3d"
-                              ? "3 days"
+                              ? t('speedtest:time_3d')
                               : timeRange === "1w"
-                              ? "week"
+                              ? t('speedtest:time_week')
                               : timeRange === "1m"
-                              ? "month"
-                              : "selected period"}
+                              ? t('speedtest:time_month')
+                              : t('speedtest:selected_period')}
                           </h3>
                           <p className="text-gray-600 dark:text-gray-400">
-                            Try selecting a different time range to view your
-                            test history.
+                            {t('speedtest:try_different_range')}
                           </p>
                         </div>
                       </motion.div>
@@ -1186,7 +1189,7 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
                         isLoading={isFetchingNextPage}
                         className="mb-4"
                       >
-                        {isFetchingNextPage ? "Loading more..." : "Load more"}
+                        {isFetchingNextPage ? t('speedtest:loading_more') : t('speedtest:load_more')}
                       </Button>
                     </motion.div>
                   </div>

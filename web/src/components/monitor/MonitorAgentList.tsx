@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { ColumnDef } from "@tanstack/react-table";
 import {
   PencilIcon,
@@ -61,6 +62,7 @@ export const MonitorAgentList: React.FC<MonitorAgentListProps> = ({
   onDeleteAgent,
   isLoading,
 }) => {
+  const { t } = useTranslation();
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [agentToDelete, setAgentToDelete] = React.useState<MonitorAgent | null>(
     null
@@ -109,7 +111,7 @@ export const MonitorAgentList: React.FC<MonitorAgentListProps> = ({
   const columns: ColumnDef<AgentTableData>[] = [
     {
       accessorKey: "name",
-      header: createSortableHeader("Agent"),
+      header: createSortableHeader(t('monitor:agent')),
       size: 200,
       cell: ({ row }) => {
         const agent = row.original;
@@ -128,7 +130,7 @@ export const MonitorAgentList: React.FC<MonitorAgentListProps> = ({
     },
     {
       id: "status",
-      header: () => <div className="hidden sm:block text-left">Status</div>,
+      header: () => <div className="hidden sm:block text-left">{t('monitor:status')}</div>,
       size: 120,
       enableHiding: true,
       cell: ({ row }) => {
@@ -142,7 +144,7 @@ export const MonitorAgentList: React.FC<MonitorAgentListProps> = ({
     },
     {
       accessorKey: "url",
-      header: () => <div className="hidden lg:block">Connection</div>,
+      header: () => <div className="hidden lg:block">{t('monitor:connection')}</div>,
       size: 300,
       enableHiding: true,
       cell: ({ row }) => {
@@ -263,7 +265,7 @@ export const MonitorAgentList: React.FC<MonitorAgentListProps> = ({
             {!isLoading && agents.length > 0 && (
               <div className="relative w-full sm:w-72">
                 <Input
-                  placeholder="Filter agents..."
+                  placeholder={t('monitor:filter_agents_placeholder')}
                   value={filterValue}
                   onChange={(e) => setFilterValue(e.target.value)}
                   className="h-8 sm:h-9 pr-8 text-sm"
@@ -323,7 +325,7 @@ export const MonitorAgentList: React.FC<MonitorAgentListProps> = ({
                 pageSize={10}
                 className="px-2 sm:px-4 pb-2 sm:pb-4"
                 tableClassName="min-w-full sm:min-w-[600px]"
-                noDataMessage="No agents found."
+                noDataMessage={t('monitor:no_agents_found')}
                 onRowClick={(agent) => onSelectAgent(agent)}
                 filterColumn={undefined} // Disable built-in filter since we moved it to header
               />

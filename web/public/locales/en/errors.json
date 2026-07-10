@@ -1,0 +1,9 @@
+{
+  "network_error": "Network error occurred",
+  "server_error": "Server error occurred",
+  "not_found": "Resource not found",
+  "validation_error": "Validation error",
+  "unknown_error": "An unknown error occurred",
+  "something_went_wrong": "Something went wrong",
+  "reload_page": "Reload page"
+}

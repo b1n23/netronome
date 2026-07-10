@@ -5,6 +5,7 @@
 
 "use client";
 
+import { useTranslation } from "react-i18next";
 import { ColumnDef } from "@tanstack/react-table";
 import { SpeedTestResult } from "@/types/types";
 import {
@@ -47,11 +48,16 @@ const getTestTypeDisplayName = (testType: string) => {
 };
 
 export const getSpeedTestColumns = (
-  settings?: TimeFormatSettings
-): ColumnDef<SpeedTestResult>[] => [
+  settings?: TimeFormatSettings,
+  t?: (key: string) => string
+): ColumnDef<SpeedTestResult>[] => {
+  // Fallback function if translation is not provided
+  const translate = t || ((key: string) => key.split(':')[1] || key);
+  
+  return [
   {
     accessorKey: "createdAt",
-    header: createSortableHeader("Date"),
+    header: createSortableHeader(translate("speedtest:date")),
     cell: ({ row }) => {
       const date = new Date(row.getValue("createdAt"));
       return (
@@ -64,7 +70,7 @@ export const getSpeedTestColumns = (
   },
   {
     accessorKey: "serverName",
-    header: "Server",
+    header: translate("speedtest:server"),
     cell: ({ row }) => (
       <span
         className="text-gray-700 dark:text-gray-300 truncate block max-w-[180px] font-medium"
@@ -77,7 +83,7 @@ export const getSpeedTestColumns = (
   },
   {
     accessorKey: "testType",
-    header: "Type",
+    header: translate("speedtest:type"),
     cell: ({ row }) => {
       const testType = row.getValue("testType") as string;
       return (
@@ -97,7 +103,7 @@ export const getSpeedTestColumns = (
   },
   {
     accessorKey: "latency",
-    header: createRightAlignedSortableHeader("Latency"),
+    header: createRightAlignedSortableHeader(translate('speedtest:latency')),
     cell: ({ row }) => {
       const latency = parseFloat(row.getValue("latency"));
       return (
@@ -109,7 +115,7 @@ export const getSpeedTestColumns = (
   },
   {
     accessorKey: "jitter",
-    header: createRightAlignedSortableHeader("Jitter"),
+    header: createRightAlignedSortableHeader(translate('speedtest:jitter')),
     cell: ({ row }) => {
       const jitter = row.getValue("jitter") as number | null;
       return (
@@ -121,7 +127,7 @@ export const getSpeedTestColumns = (
   },
   {
     accessorKey: "downloadSpeed",
-    header: createRightAlignedSortableHeader("Download"),
+    header: createRightAlignedSortableHeader(translate('speedtest:download')),
     cell: ({ row }) => {
       const speed = row.getValue("downloadSpeed") as number;
       return (
@@ -133,7 +139,7 @@ export const getSpeedTestColumns = (
   },
   {
     accessorKey: "uploadSpeed",
-    header: createRightAlignedSortableHeader("Upload"),
+    header: createRightAlignedSortableHeader(translate('speedtest:upload')),
     cell: ({ row }) => {
       const speed = row.getValue("uploadSpeed") as number;
       return (
@@ -144,11 +150,16 @@ export const getSpeedTestColumns = (
     },
   },
 ];
+};
 
 // Mobile-friendly columns with fewer fields
 export const getSpeedTestMobileColumns = (
-  settings?: TimeFormatSettings
-): ColumnDef<SpeedTestResult>[] => [
+  settings?: TimeFormatSettings,
+  t?: (key: string) => string
+): ColumnDef<SpeedTestResult>[] => {
+  const translate = t || ((key: string) => key.split(':')[1] || key);
+  
+  return [
   {
     id: "summary",
     cell: ({ row }) => {
@@ -175,27 +186,27 @@ export const getSpeedTestMobileColumns = (
           </div>
           <div className="grid grid-cols-2 gap-4 text-sm">
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">Latency:</span>
+              <span className="text-gray-600 dark:text-gray-400">{translate('speedtest:latency')}:</span>
               <span className="text-amber-600 dark:text-amber-400 font-mono font-semibold">
                 {parseFloat(test.latency).toFixed(1)}ms
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">Jitter:</span>
+              <span className="text-gray-600 dark:text-gray-400">{translate('speedtest:jitter')}:</span>
               <span className="text-purple-600 dark:text-purple-400 font-mono font-semibold">
                 {test.jitter !== null && test.jitter !== undefined ? `${test.jitter.toFixed(1)}ms` : "—"}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className="text-gray-600 dark:text-gray-400">
-                Download:
+                {translate('speedtest:download')}:
               </span>
               <span className="text-blue-600 dark:text-blue-400 font-mono font-semibold">
                 {formatSpeed(test.downloadSpeed)}
               </span>
             </div>
             <div className="flex justify-between items-center">
-              <span className="text-gray-600 dark:text-gray-400">Upload:</span>
+              <span className="text-gray-600 dark:text-gray-400">{translate('speedtest:upload')}:</span>
               <span className="text-emerald-600 dark:text-emerald-400 font-mono font-semibold">
                 {formatSpeed(test.uploadSpeed)}
               </span>
@@ -206,3 +217,4 @@ export const getSpeedTestMobileColumns = (
     },
   },
 ];
+};

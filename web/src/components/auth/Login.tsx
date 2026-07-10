@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/context/auth";
 import { router } from "@/routes";
 import logo from "@/assets/logo_small.png";
@@ -17,32 +18,34 @@ import { Button } from "@/components/ui/Button";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-// Error message mapping for cleaner code
-const ERROR_MESSAGES: Record<string, string> = {
-  "Invalid credentials": "Incorrect username or password",
-  "Invalid request data": "Please check your input and try again",
-  "Failed to get user": "Unable to verify user credentials",
-  "Failed to generate session token": "Authentication failed, please try again",
+// Error message keys for translation
+const ERROR_MESSAGE_KEYS: Record<string, string> = {
+  "Invalid credentials": "auth:invalid_credentials",
+  "Invalid request data": "auth:invalid_request",
+  "Failed to get user": "auth:failed_get_user",
+  "Failed to generate session token": "auth:failed_generate_token",
 };
 
-const OIDC_ERROR_MESSAGES: Record<string, string> = {
-  oidc_unavailable: "OpenID Connect sign-in is currently unavailable. Use local credentials if you have them.",
+const OIDC_ERROR_KEYS: Record<string, string> = {
+  oidc_unavailable: "auth:oidc_unavailable",
 };
 
-function getInitialLoginError(): string {
+function getInitialLoginErrorKey(): string {
   const errorCode = new URLSearchParams(window.location.search).get("error");
   if (!errorCode) {
     return "";
   }
 
-  return OIDC_ERROR_MESSAGES[errorCode] || "Unable to sign in with OpenID Connect.";
+  return OIDC_ERROR_KEYS[errorCode] || "auth:oidc_sign_in_failed";
 }
 
 export default function Login() {
+  const { t } = useTranslation();
   const { login, checkRegistrationStatus } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(getInitialLoginError);
+  const [errorKey, setErrorKey] = useState(getInitialLoginErrorKey);
+  const error = errorKey ? t(errorKey) : "";
   const [isLoading, setIsLoading] = useState(true);
   const [authOptions, setAuthOptions] = useState({
     hasUsers: true,
@@ -79,7 +82,7 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setErrorKey("");
 
     try {
       await login(username, password);
@@ -93,9 +96,9 @@ export default function Login() {
           return;
         }
 
-        setError(ERROR_MESSAGES[errorMessage] || "An error occurred while signing in");
+        setErrorKey(ERROR_MESSAGE_KEYS[errorMessage] || "auth:sign_in_error");
       } else {
-        setError("Unable to sign in at this time");
+        setErrorKey("auth:sign_in_unavailable");
       }
     }
   };
@@ -121,7 +124,7 @@ export default function Login() {
             Netronome
           </h2>
           <p className="text-sm text-gray-600 dark:text-gray-400 pointer-events-none select-none">
-            network performance testing
+            {t('common:app_tagline', 'network performance testing')}
           </p>
         </CardHeader>
 
@@ -140,8 +143,8 @@ export default function Login() {
                 className="w-full border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400"
                 size="lg"
               >
-                <span className="flex items-center" aria-label="Sign in with OpenID">
-                  Sign in with
+                <span className="flex items-center" aria-label={t('auth:sign_in_with_oidc')}>
+                  {t('auth:sign_in_with')}
                   <FontAwesomeIcon icon={faOpenid} className="text-lg ml-2" aria-hidden="true" />
                 </span>
               </Button>
@@ -153,7 +156,7 @@ export default function Login() {
                   <div className="w-full border-t border-gray-200 dark:border-gray-700" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase tracking-[0.2em] text-gray-500 dark:text-gray-400">
-                  <span className="bg-white dark:bg-gray-850 px-3">or</span>
+                  <span className="bg-white dark:bg-gray-850 px-3">{t('common:or')}</span>
                 </div>
               </div>
             )}
@@ -163,7 +166,7 @@ export default function Login() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="username" className="sr-only">
-                      Username
+                      {t('auth:username')}
                     </Label>
                     <Input
                       id="username"
@@ -171,7 +174,7 @@ export default function Login() {
                       type="text"
                       autoComplete="username"
                       required
-                      placeholder="Username"
+                      placeholder={t('auth:username')}
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       className={cn(
@@ -182,7 +185,7 @@ export default function Login() {
                   </div>
                   <div>
                     <Label htmlFor="password" className="sr-only">
-                      Password
+                      {t('auth:password')}
                     </Label>
                     <Input
                       id="password"
@@ -190,7 +193,7 @@ export default function Login() {
                       type="password"
                       autoComplete="current-password"
                       required
-                      placeholder="Password"
+                      placeholder={t('auth:password')}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       className={cn(
@@ -202,14 +205,14 @@ export default function Login() {
                 </div>
 
                 <Button type="submit" className="w-full" size="lg">
-                  Sign in
+                  {t('auth:sign_in')}
                 </Button>
               </form>
             )}
 
             {!authOptions.hasUsers && authOptions.oidcConfigured && !authOptions.oidcReady && (
               <div className="rounded-md border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200">
-                OpenID Connect is configured but the provider is unavailable right now.
+                {t('auth:oidc_configured_unavailable')}
               </div>
             )}
           </div>

@@ -4,6 +4,7 @@
  */
 
 import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Container } from "@mui/material";
 import { FaGithub } from "react-icons/fa";
 import { XMarkIcon } from "@heroicons/react/20/solid";
@@ -87,26 +88,35 @@ export default function Main({ isPublic = false }: MainProps) {
     return saved || "dashboard";
   });
 
+  const { t, i18n } = useTranslation();
+  
+  // Debug: log current language and test translations
+  console.log('Main.tsx - Current language:', i18n.language);
+  console.log('Main.tsx - Supported languages:', i18n.languages);
+  console.log('Main.tsx - Test translation (dashboard):', t('common:dashboard'));
+  console.log('Main.tsx - Test translation (speedtest title):', t('speedtest:title'));
+
+
   // Tab configuration
   const tabs = [
     {
       id: "dashboard",
-      label: "Dashboard",
+      label: t('common:dashboard', 'Dashboard'),
       icon: <ChartBarIcon className="w-5 h-5" />,
     },
     {
       id: "speedtest",
-      label: "Speed Test",
+      label: t('speedtest:title', 'Speed Test'),
       icon: <PlayIcon className="w-5 h-5" />,
     },
     {
       id: "traceroute",
-      label: "Traceroute",
+      label: t('common:traceroute', 'Traceroute'),
       icon: <GlobeAltIcon className="w-5 h-5" />,
     },
     {
       id: "monitor",
-      label: "Agents",
+      label: t('monitor:agents', 'Agents'),
       icon: <ServerIcon className="w-5 h-5" />,
     },
   ];

@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import {
   XMarkIcon,
   ArrowDownIcon,
@@ -35,6 +36,7 @@ export const MonitorUsageModal: React.FC<MonitorUsageModalProps> = ({
   onClose,
   agent,
 }) => {
+  const { t } = useTranslation();
   const { status, nativeData, hardwareStats } = useMonitorAgent({
     agent,
     includeNativeData: true,
@@ -69,7 +71,7 @@ export const MonitorUsageModal: React.FC<MonitorUsageModalProps> = ({
                   {agent.isTailscale && (
                     <TailscaleLogo
                       className="h-4 w-4 flex-shrink-0"
-                      title="Connected through Tailscale"
+                      title={t('monitor:connected_through_tailscale')}
                     />
                   )}
                 </div>

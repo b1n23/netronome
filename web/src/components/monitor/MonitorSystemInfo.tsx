@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import {
   ServerIcon,
@@ -27,6 +28,7 @@ export const MonitorSystemInfo: React.FC<MonitorSystemInfoProps> = ({
   systemInfo,
   isOffline = false,
 }) => {
+  const { t } = useTranslation();
   const formatUptime = (seconds: number): string => {
     const days = Math.floor(seconds / 86400);
     const hours = Math.floor((seconds % 86400) / 3600);
@@ -173,7 +175,7 @@ export const MonitorSystemInfo: React.FC<MonitorSystemInfoProps> = ({
                     : "text-emerald-600 dark:text-emerald-400"
                 }`}
               >
-                {isOffline ? "Offline" : "Connected"}
+                {isOffline ? t('monitor:offline') : t('monitor:connected')}
               </p>
             </div>
             {!isOffline && (

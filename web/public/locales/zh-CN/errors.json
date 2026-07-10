@@ -1,0 +1,9 @@
+{
+  "network_error": "发生网络错误",
+  "server_error": "发生服务器错误",
+  "not_found": "未找到资源",
+  "validation_error": "验证错误",
+  "unknown_error": "发生未知错误",
+  "something_went_wrong": "出现错误",
+  "reload_page": "重新加载页面"
+}

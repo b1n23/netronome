@@ -16,6 +16,8 @@ import (
 const (
 	dashboardRecentRowsSettingKey = "dashboard_recent_speedtests_rows"
 	dashboardRecentRowsDefault    = 20
+	languageSettingKey            = "language"
+	languageDefault               = "en"
 )
 
 var allowedDashboardRecentRows = map[int]struct{}{
@@ -23,6 +25,12 @@ var allowedDashboardRecentRows = map[int]struct{}{
 	20:  {},
 	50:  {},
 	100: {},
+}
+
+var supportedLanguages = map[string]struct{}{
+	"en":    {},
+	"zh-CN": {},
+	"ja":    {},
 }
 
 type dashboardSettingsResponse struct {
@@ -85,5 +93,63 @@ func (s *Server) handleUpdateDashboardSettings(c *gin.Context) {
 
 func isAllowedDashboardRecentRows(rows int) bool {
 	_, ok := allowedDashboardRecentRows[rows]
+	return ok
+}
+
+// Language settings
+
+type languageSettingsResponse struct {
+	Language string `json:"language"`
+}
+
+type updateLanguageSettingsRequest struct {
+	Language string `json:"language"`
+}
+
+func (s *Server) handleGetLanguageSettings(c *gin.Context) {
+	value, err := s.db.GetAppSetting(c.Request.Context(), languageSettingKey)
+	if err != nil {
+		if err == database.ErrNotFound {
+			c.JSON(http.StatusOK, languageSettingsResponse{Language: languageDefault})
+			return
+		}
+
+		log.Error().Err(err).Msg("Failed to get language settings")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get language settings"})
+		return
+	}
+
+	if !isSupportedLanguage(value) {
+		log.Warn().Str("value", value).Msg("Invalid persisted language setting, using default")
+		c.JSON(http.StatusOK, languageSettingsResponse{Language: languageDefault})
+		return
+	}
+
+	c.JSON(http.StatusOK, languageSettingsResponse{Language: value})
+}
+
+func (s *Server) handleUpdateLanguageSettings(c *gin.Context) {
+	var req updateLanguageSettingsRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
+		return
+	}
+
+	if !isSupportedLanguage(req.Language) {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "language must be one of: en, zh-CN, ja"})
+		return
+	}
+
+	if err := s.db.SetAppSetting(c.Request.Context(), languageSettingKey, req.Language); err != nil {
+		log.Error().Err(err).Msg("Failed to update language settings")
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to update language settings"})
+		return
+	}
+
+	c.JSON(http.StatusOK, languageSettingsResponse{Language: req.Language})
+}
+
+func isSupportedLanguage(lang string) bool {
+	_, ok := supportedLanguages[lang]
 	return ok
 }

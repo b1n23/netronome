@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { EyeIcon, EyeSlashIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/input";
@@ -34,6 +35,7 @@ export const MonitorAgentForm: React.FC<MonitorAgentFormProps> = ({
   isSubmitting,
   isOpen,
 }) => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState<CreateAgentRequest>({
     name: "",
     url: "http://",
@@ -103,7 +105,7 @@ export const MonitorAgentForm: React.FC<MonitorAgentFormProps> = ({
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {agent ? (agent.isTailscale ? "Edit Monitoring Settings" : "Edit Agent") : "Add Agent"}
+            {agent ? (agent.isTailscale ? t('monitor:edit_monitoring_settings') : t('monitor:edit_agent')) : t('monitor:add_agent')}
           </DialogTitle>
         </DialogHeader>
 
@@ -144,7 +146,7 @@ export const MonitorAgentForm: React.FC<MonitorAgentFormProps> = ({
 
           <div>
             <Label htmlFor="name">
-              Agent Name
+              {t('monitor:agent_name')}
             </Label>
             <Input
               type="text"
@@ -154,7 +156,7 @@ export const MonitorAgentForm: React.FC<MonitorAgentFormProps> = ({
               onChange={(e) =>
                 setFormData({ ...formData, name: e.target.value })
               }
-              placeholder="Remote Server"
+              placeholder={t('monitor:agent_name_placeholder')}
               required
               disabled={isAutoDiscoveredTailscale}
             />
@@ -162,19 +164,19 @@ export const MonitorAgentForm: React.FC<MonitorAgentFormProps> = ({
 
           <div>
             <Label htmlFor="url">
-              Agent URL
+              {t('monitor:agent_url')}
             </Label>
             <Input
               type="url"
               id="url"
               value={formData.url}
               onChange={(e) => handleUrlChange(e.target.value)}
-              placeholder="http://192.168.1.100:8200"
+              placeholder={t('monitor:agent_url_placeholder')}
               required
               disabled={isAutoDiscoveredTailscale}
             />
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
-              Enter the base URL of the monitor agent
+              {t('monitor:agent_url_help')}
             </p>
           </div>
 
@@ -257,7 +259,7 @@ export const MonitorAgentForm: React.FC<MonitorAgentFormProps> = ({
               onClick={onCancel}
               disabled={isSubmitting}
             >
-              Cancel
+              {t('common:cancel')}
             </Button>
             <Button
               type="submit"

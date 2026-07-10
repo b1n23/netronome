@@ -4,6 +4,7 @@
  */
 
 import React, { useState, useMemo, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { SavedIperfServer, Server } from "@/types/types";
 import {
@@ -64,6 +65,7 @@ export const ServerList: React.FC<ServerListProps> = ({
   isServersLoading,
   isServersError,
 }) => {
+  const { t } = useTranslation();
   const getInitialDisplayCount = () => {
     if (typeof window !== "undefined") {
       return window.innerWidth >= 1024 ? 6 : 3;
@@ -265,10 +267,10 @@ export const ServerList: React.FC<ServerListProps> = ({
         >
           <div className="flex flex-col">
             <h2 className="text-gray-900 dark:text-white text-xl font-semibold p-1 select-none">
-              Server Selection
+              {t('speedtest:server_selection')}
             </h2>
             <p className="text-gray-600 dark:text-gray-400 text-sm pl-1 pb-1">
-              Choose between speedtest.net, iperf3 or librespeed servers
+              {t('speedtest:server_selection_desc')}
             </p>
           </div>
           <div className="flex items-center gap-2">
@@ -342,9 +344,9 @@ export const ServerList: React.FC<ServerListProps> = ({
                         onValueChange={(value) => handleTestTypeChange(value as "speedtest" | "iperf" | "librespeed")}
                         className="flex items-center gap-2 sm:gap-4"
                       >
-                        <RadioOption value="speedtest">Speedtest</RadioOption>
-                        <RadioOption value="iperf">iperf3</RadioOption>
-                        <RadioOption value="librespeed">Librespeed</RadioOption>
+                        <RadioOption value="speedtest">{t('speedtest:test_type_speedtest')}</RadioOption>
+                        <RadioOption value="iperf">{t('speedtest:test_type_iperf3')}</RadioOption>
+                        <RadioOption value="librespeed">{t('speedtest:test_type_librespeed')}</RadioOption>
                       </RadioGroup>
                     </div>
 
@@ -354,7 +356,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                       disabled={isLoading || selectedServers.length === 0}
                       className="w-full sm:w-auto"
                     >
-                      Run
+                      {t('speedtest:run')}
                     </Button>
                   </div>
 
@@ -366,7 +368,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                           <div className="flex-1">
                             <Input
                               type="text"
-                              placeholder="Search saved servers..."
+                              placeholder={t('speedtest:search_saved_servers')}
                               value={iperfSearchTerm}
                               onChange={(e) =>
                                 setIperfSearchTerm(e.target.value)
@@ -378,7 +380,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                             className="px-3 py-2 bg-gray-100 dark:bg-gray-800/50 hover:bg-gray-200 dark:hover:bg-gray-700/50 text-gray-700 dark:text-gray-300 rounded-lg transition-colors border border-gray-300 dark:border-gray-900 hover:border-gray-400 dark:hover:border-gray-700 shadow-md text-sm"
                             title="Add new iperf3 server"
                           >
-                            + Add
+                            {t('speedtest:add_server')}
                           </button>
                         </div>
                       </div>
@@ -392,7 +394,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                       <div className="flex-1">
                         <Input
                           type="text"
-                          placeholder="Search servers..."
+                          placeholder={t('speedtest:search_servers')}
                           value={searchTerm}
                           onChange={(e) => setSearchTerm(e.target.value)}
                         />
@@ -404,11 +406,11 @@ export const ServerList: React.FC<ServerListProps> = ({
                         onValueChange={(value) => setFilterCountry(value === "all-countries" ? "" : value)}
                       >
                         <SelectTrigger className="min-w-[160px]">
-                          <SelectValue placeholder="All Countries" />
+                          <SelectValue placeholder={t('speedtest:all_countries')} />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all-countries">
-                            All Countries
+                            {t('speedtest:all_countries')}
                           </SelectItem>
                           {countries.map((country) => (
                             <SelectItem key={country} value={country}>
@@ -428,12 +430,10 @@ export const ServerList: React.FC<ServerListProps> = ({
                           <div className="text-center max-w-md">
                             <div className="text-gray-600 dark:text-gray-400 text-lg mb-2">🔧</div>
                             <h3 className="text-lg font-medium text-gray-900 dark:text-gray-300 mb-2">
-                              No iperf3 servers found
+                              {t('speedtest:no_iperf3_servers')}
                             </h3>
                             <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                              Add your first iperf3 server using the input
-                              above. Enter the server address and port (e.g.,
-                              iperf.example.com:5201)
+                              {t('speedtest:add_first_iperf3_desc')}
                             </p>
                           </div>
                         </div>
@@ -478,7 +478,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                                         {server.name}
                                       </span>
                                       <span className="text-gray-600 dark:text-gray-400 text-sm">
-                                        iperf3 Server
+                                        {t('speedtest:iperf3_server')}
                                         <span
                                           className="block truncate text-xs text-gray-500 dark:text-gray-500"
                                           title={`${server.host}:${server.port}`}
@@ -487,7 +487,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                                         </span>
                                       </span>
                                       <span className="text-gray-600 dark:text-gray-400 text-sm mt-1">
-                                        Custom Server
+                                        {t('speedtest:custom_server')}
                                       </span>
                                     </div>
                                     <button
@@ -517,7 +517,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                             }
                             className="px-4 py-2 bg-gray-200/30 dark:bg-gray-800/30 border border-gray-300/50 dark:border-gray-900/50 text-gray-600/50 dark:text-gray-300/50 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg hover:bg-gray-300/50 dark:hover:bg-gray-800/50 transition-colors"
                           >
-                            Load More
+                            {t('speedtest:load_more')}
                           </button>
                         </div>
                       )}
@@ -531,7 +531,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                             {isServersLoading ? (
                               <>
                                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-300 mb-2">
-                                  Loading LibreSpeed servers...
+                                  {t('speedtest:loading_librespeed')}
                                 </h3>
                                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
                                   Fetching public servers from LibreSpeed.org.
@@ -540,19 +540,19 @@ export const ServerList: React.FC<ServerListProps> = ({
                             ) : isServersError ? (
                               <>
                                 <h3 className="text-lg font-medium text-red-600 dark:text-red-400 mb-2">
-                                  Failed to load servers
+                                  {t('speedtest:librespeed_error')}
                                 </h3>
                                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                  Could not fetch LibreSpeed servers. Check your network connection or add custom servers via librespeed-servers.json.
+                                  {t('speedtest:no_librespeed_desc')}
                                 </p>
                               </>
                             ) : (
                               <>
                                 <h3 className="text-lg font-medium text-gray-900 dark:text-gray-300 mb-2">
-                                  No LibreSpeed servers found
+                                  {t('speedtest:no_librespeed_servers')}
                                 </h3>
                                 <p className="text-gray-600 dark:text-gray-400 text-sm mb-4">
-                                  No servers matched your search. Try adjusting your filters or add custom servers via librespeed-servers.json.
+                                  {t('speedtest:no_librespeed_desc')}
                                 </p>
                               </>
                             )}
@@ -592,7 +592,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                                                 : "bg-purple-500/10 text-purple-600 dark:text-purple-400"
                                             }`}
                                           >
-                                            {server.isPublic ? "Public" : "Custom"}
+                                            {server.isPublic ? t('speedtest:server_badge_public') : t('speedtest:server_badge_custom')}
                                           </span>
                                         )}
                                       </div>
@@ -626,7 +626,7 @@ export const ServerList: React.FC<ServerListProps> = ({
                           onClick={() => setDisplayCount((prev) => prev + 6)}
                           className="px-4 py-2 bg-gray-200/30 dark:bg-gray-800/30 border border-gray-300/50 dark:border-gray-900/50 text-gray-600/50 dark:text-gray-300/50 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg hover:bg-gray-300/50 dark:hover:bg-gray-800/50 transition-colors"
                         >
-                          Load More
+                          {t('speedtest:load_more')}
                         </button>
                       </div>
                     )}
@@ -644,9 +644,9 @@ export const ServerList: React.FC<ServerListProps> = ({
                   deleteSavedServer(serverToDelete);
                 }
               }}
-              title="Delete Server"
-              message="Are you sure you want to delete this server? This action cannot be undone."
-              confirmText="Delete"
+              title={t('speedtest:delete_server')}
+              message={t('speedtest:delete_server_confirm')}
+              confirmText={t('speedtest:delete')}
               confirmStyle="danger"
             />
 
@@ -665,9 +665,9 @@ export const ServerList: React.FC<ServerListProps> = ({
                   );
                 }
               }}
-              title="Save Server"
-              message="Enter a name for this iperf server"
-              confirmText="Save"
+              title={t('speedtest:save_server')}
+              message={t('speedtest:enter_name_prompt')}
+              confirmText={t('speedtest:save')}
               serverDetails={newServerDetails}
             />
 
@@ -731,7 +731,7 @@ const AddServerModal: React.FC<AddServerModalProps> = ({
     <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
       <DialogContent className="w-full max-w-md">
         <DialogHeader>
-          <DialogTitle>Add iperf3 Server</DialogTitle>
+          <DialogTitle>{t('speedtest:add_iperf3_server')}</DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
@@ -744,7 +744,7 @@ const AddServerModal: React.FC<AddServerModalProps> = ({
               id="serverName"
               value={serverName}
               onChange={(e) => setServerName(e.target.value)}
-              placeholder="Enter a name for this server"
+              placeholder={t('speedtest:enter_name_prompt')}
               autoFocus
             />
           </div>
@@ -780,7 +780,7 @@ const AddServerModal: React.FC<AddServerModalProps> = ({
             variant="ghost"
             onClick={handleClose}
           >
-            Cancel
+            {t('common:cancel')}
           </Button>
           <Button
             type="button"

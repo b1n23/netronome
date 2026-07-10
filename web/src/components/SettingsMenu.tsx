@@ -8,11 +8,13 @@ import {
   Cog6ToothIcon,
   BellIcon,
   ClockIcon,
+  GlobeAltIcon,
   MapPinIcon,
   PresentationChartLineIcon,
 } from "@heroicons/react/24/outline";
 import { NotificationSettings } from "./settings/NotificationSettings";
 import { TimeFormatSettings } from "./settings/TimeFormatSettings";
+import { LanguageSettings } from "./settings/LanguageSettings";
 import { DistanceSettings } from "./settings/DistanceSettings";
 import { DashboardSettings } from "./settings/DashboardSettings";
 import { Button } from "@/components/ui/Button";
@@ -48,6 +50,12 @@ const settingsSections: SettingsSection[] = [
     label: "Time & Timezone",
     icon: <ClockIcon className="w-4 h-4" />,
     component: TimeFormatSettings,
+  },
+  {
+    id: "language",
+    label: "Language",
+    icon: <GlobeAltIcon className="w-4 h-4" />,
+    component: LanguageSettings,
   },
   {
     id: "distance",

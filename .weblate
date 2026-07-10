@@ -1,0 +1,67 @@
+[weblate]
+url = https://hosted.weblate.org/
+name = netronome
+
+[[weblate.components]]
+name = frontend
+repo = autobrr/netronome
+branch = develop
+filemask = web/public/locales/*/common.json
+template = web/public/locales/en/common.json
+file_format = json-nested
+new_lang = add
+check_flags = ["ignore-placeholders"]
+
+[[weblate.components]]
+name = frontend-speedtest
+repo = autobrr/netronome
+branch = develop
+filemask = web/public/locales/*/speedtest.json
+template = web/public/locales/en/speedtest.json
+file_format = json-nested
+new_lang = add
+
+[[weblate.components]]
+name = frontend-monitor
+repo = autobrr/netronome
+branch = develop
+filemask = web/public/locales/*/monitor.json
+template = web/public/locales/en/monitor.json
+file_format = json-nested
+new_lang = add
+
+[[weblate.components]]
+name = frontend-settings
+repo = autobrr/netronome
+branch = develop
+filemask = web/public/locales/*/settings.json
+template = web/public/locales/en/settings.json
+file_format = json-nested
+new_lang = add
+
+[[weblate.components]]
+name = frontend-notifications
+repo = autobrr/netronome
+branch = develop
+filemask = web/public/locales/*/notifications.json
+template = web/public/locales/en/notifications.json
+file_format = json-nested
+new_lang = add
+
+[[weblate.components]]
+name = frontend-auth
+repo = autobrr/netronome
+branch = develop
+filemask = web/public/locales/*/auth.json
+template = web/public/locales/en/auth.json
+file_format = json-nested
+new_lang = add
+
+[[weblate.components]]
+name = frontend-errors
+repo = autobrr/netronome
+branch = develop
+filemask = web/public/locales/*/errors.json
+template = web/public/locales/en/errors.json
+file_format = json-nested
+new_lang = add

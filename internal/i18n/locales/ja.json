@@ -1,0 +1,20 @@
+{
+  "error.internal": "内部サーバーエラー",
+  "error.not_found": "リソースが見つかりません",
+  "error.unauthorized": "未認証",
+  "error.forbidden": "アクセス拒否",
+  "error.bad_request": "不正なリクエスト",
+  "error.validation": "検証エラー",
+  "error.database": "データベースエラー",
+  "error.network": "ネットワークエラー",
+  "auth.invalid_credentials": "ユーザー名またはパスワードが無効です",
+  "auth.token_expired": "認証トークンの有効期限が切れました",
+  "auth.missing_token": "認証トークンが必要です",
+  "speedtest.started": "速度テストを開始しました",
+  "speedtest.completed": "速度テストが完了しました",
+  "speedtest.failed": "速度テストに失敗しました：%s",
+  "monitor.agent_offline": "エージェント '%s' がオフラインです",
+  "monitor.agent_online": "エージェント '%s' がオンラインになりました",
+  "notification.test": "Netronome からのテスト通知",
+  "notification.speedtest_threshold": "速度テストのしきい値を超えました：%s"
+}

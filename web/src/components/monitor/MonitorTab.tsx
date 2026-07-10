@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "motion/react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { MonitorAgentList } from "./MonitorAgentList";
@@ -31,6 +32,7 @@ import {
 import { MONITOR_REFRESH_INTERVALS } from "@/constants/monitorRefreshIntervals";
 
 export const MonitorTab: React.FC = () => {
+  const { t } = useTranslation();
   const [selectedAgent, setSelectedAgent] = useState<MonitorAgent | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingAgent, setEditingAgent] = useState<MonitorAgent | null>(null);
@@ -289,20 +291,20 @@ export const MonitorTab: React.FC = () => {
                   variant="secondary"
                   size="sm"
                   className="gap-1.5"
-                  title="Edit agent"
+                  title={t('monitor:edit_agent')}
                 >
                   <PencilIcon className="h-4 w-4" />
-                  <span className="hidden sm:inline">Edit</span>
+                  <span className="hidden sm:inline">{t('monitor:edit_agent')}</span>
                 </Button>
                 <Button
                   onClick={() => handleDeleteAgent(selectedAgent)}
                   variant="secondary"
                   size="sm"
                   className="gap-1.5 hover:bg-red-100 dark:hover:bg-red-900/30 hover:text-red-600 dark:hover:text-red-400"
-                  title="Delete agent"
+                  title={t('monitor:delete_agent')}
                 >
                   <TrashIcon className="h-4 w-4" />
-                  <span className="hidden sm:inline">Delete</span>
+                  <span className="hidden sm:inline">{t('monitor:delete_agent')}</span>
                 </Button>
               </div>
             </div>

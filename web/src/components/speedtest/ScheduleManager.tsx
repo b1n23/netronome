@@ -5,6 +5,7 @@
 
 import { type ReactNode, useState, useEffect } from "react";
 import { type Schedule, type Server, type SavedIperfServer, type TestType } from "@/types/types";
+import { useTranslation } from "react-i18next";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getSchedules } from "@/api/speedtest";
 import { showToast } from "@/components/common/Toast";
@@ -61,16 +62,7 @@ interface TimeOption {
   label: string;
 }
 
-const intervalOptions: IntervalOption[] = [
-  { value: "5m", label: "Every 5 Minutes" },
-  { value: "15m", label: "Every 15 Minutes" },
-  { value: "30m", label: "Every 30 Minutes" },
-  { value: "1h", label: "Every Hour" },
-  { value: "6h", label: "Every 6 Hours" },
-  { value: "12h", label: "Every 12 Hours" },
-  { value: "24h", label: "Every Day" },
-  { value: "7d", label: "Every Week" },
-];
+// intervalOptions will be defined inside the component to access t()
 
 const timeOptions: TimeOption[] = [
   { value: "00:00", label: "12:00 AM" },
@@ -183,7 +175,20 @@ const formatExactTimeFromUTC = (time: string): string => {
 };
 
 export default function ScheduleManager({ servers, selectedServers, testType }: ScheduleManagerProps) {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
+  
+  const intervalOptions: IntervalOption[] = [
+    { value: "5m", label: t('speedtest:interval_5m') },
+    { value: "15m", label: t('speedtest:interval_15m') },
+    { value: "30m", label: t('speedtest:interval_30m') },
+    { value: "1h", label: t('speedtest:interval_1h') },
+    { value: "6h", label: t('speedtest:interval_6h') },
+    { value: "12h", label: t('speedtest:interval_12h') },
+    { value: "24h", label: t('speedtest:interval_24h') },
+    { value: "7d", label: t('speedtest:interval_7d') },
+  ];
+  
   const [iperfServers, setIperfServers] = useState<SavedIperfServer[]>([]);
   const [interval, setInterval] = useState<string>("1h");
   const [scheduleType, setScheduleType] = useState<"interval" | "exact">(
@@ -288,18 +293,18 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
       return intervalOptions.find((opt) => opt.value === interval)?.label || interval;
     }
     if (exactTimes.length === 1) {
-      return `Daily at ${timeOptions.find((opt) => opt.value === exactTimes[0])?.label}`;
+      return `${t('speedtest:daily_at')} ${timeOptions.find((opt) => opt.value === exactTimes[0])?.label}`;
     }
-    return `Daily at ${exactTimes.length} times`;
+    return `${t('speedtest:daily_at')} ${exactTimes.length} times`;
   }
 
   function renderButtonContent(): ReactNode {
     if (isMissingServer) {
       const label = testType === "iperf" ? "iperf3" : "LibreSpeed";
-      return <>Select a {label} server</>;
+      return <>{t('speedtest:select_server', { label })}</>;
     }
     if (isMissingTime) {
-      return <>Select at least one time</>;
+      return <>{t('speedtest:select_time')}</>;
     }
 
     const icon = scheduleType === "interval"
@@ -309,7 +314,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
     return (
       <>
         {icon}
-        <span>Create {getScheduleDescription()}</span>
+        <span>{t('speedtest:create')} {getScheduleDescription()}</span>
       </>
     );
   }
@@ -525,10 +530,10 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
           >
             <div className="flex flex-col">
               <h2 className="text-gray-900 dark:text-white text-xl font-semibold p-1 select-none">
-                Schedule Manager
+                {t('speedtest:schedule_manager')}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm pl-1 pb-1">
-                Create and manage your schedules
+                {t('speedtest:schedule_manager_desc')}
               </p>
             </div>
             <ChevronDownIcon
@@ -558,7 +563,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                 }`}
                               >
                                 <ArrowPathIcon className="w-4 h-4" />
-                                <span>Interval</span>
+                                <span>{t('speedtest:schedule_type_interval')}</span>
                               </Button>
                               <Button
                                 onClick={() => setScheduleType("exact")}
@@ -570,7 +575,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                 }`}
                               >
                                 <ClockIcon className="w-4 h-4" />
-                                <span>Exact Time</span>
+                                <span>{t('speedtest:schedule_type_exact')}</span>
                               </Button>
                             </div>
                           </div>
@@ -650,7 +655,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                   <div className="max-h-[400px] overflow-y-auto">
                                     <div className="p-2 border-b border-gray-200 dark:border-gray-700">
                                       <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                        Select times for daily schedule
+                                        {t('speedtest:select_daily_times')}
                                       </p>
                                     </div>
                                     <div className="p-2 space-y-1">
@@ -683,7 +688,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                           onClick={() => setExactTimes([])}
                                           className="w-full text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                                         >
-                                          Clear all
+                                          {t('speedtest:clear_all')}
                                         </Button>
                                       </div>
                                     )}
@@ -698,7 +703,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                               exactTimes.length > 0) && (
                               <div className="mt-4 p-3 bg-gray-200/50 dark:bg-gray-800/30 rounded-lg border border-gray-300 dark:border-gray-900">
                                 <p className="text-sm text-gray-600 dark:text-gray-400">
-                                  <span className="font-medium">Next run:</span>{" "}
+                                  <span className="font-medium">{t('speedtest:next_run')}:</span>{" "}
                                   <span className="text-blue-600 dark:text-blue-400">
                                     {(() => {
                                       // Force re-calculation when updateTrigger changes
@@ -718,21 +723,15 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                       );
 
                                       if (diffMins < 60) {
-                                        return `in ${diffMins} minute${
-                                          diffMins !== 1 ? "s" : ""
-                                        }`;
+                                        return t('speedtest:time_in_minutes', { count: diffMins });
                                       } else if (diffMins < 1440) {
                                         const hours = Math.floor(diffMins / 60);
-                                        return `in ${hours} hour${
-                                          hours !== 1 ? "s" : ""
-                                        }`;
+                                        return t('speedtest:time_in_hours', { count: hours });
                                       } else {
                                         const days = Math.floor(
                                           diffMins / 1440
                                         );
-                                        return `in ${days} day${
-                                          days !== 1 ? "s" : ""
-                                        }`;
+                                        return t('speedtest:time_in_days', { count: days });
                                       }
                                     })()}
                                   </span>
@@ -797,7 +796,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                             }}
                           >
                             <h6 className="text-gray-900 dark:text-white mb-4 text-lg font-semibold">
-                              Active Schedules
+                              {t('speedtest:active_schedules')}
                             </h6>
 
                             <div className="grid grid-cols-1 gap-4">
@@ -820,7 +819,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                             <>
                                               <ClockIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                                               <span>
-                                                Daily at{" "}
+                                                {t('speedtest:daily_at')}{" "}
                                                 {(() => {
                                                   const times =
                                                     schedule.interval
@@ -840,7 +839,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                             <>
                                               <ArrowPathIcon className="w-4 h-4 text-green-600 dark:text-green-400" />
                                               <span>
-                                                Every {schedule.interval}
+                                                {t('speedtest:every')} {schedule.interval}
                                               </span>
                                             </>
                                           )}
@@ -860,7 +859,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                       </div>
                                       <p className="text-gray-600 dark:text-gray-400 text-sm">
                                         <span className="font-medium">
-                                          Server:
+                                          {t('speedtest:server')}:
                                         </span>{" "}
                                         <span className="truncate">
                                           {getServerNames(schedule.serverIds)}
@@ -872,7 +871,7 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                           .split(",").length > 1 && (
                                           <div className="text-gray-600 dark:text-gray-400 text-sm mt-1">
                                             <span className="font-medium">
-                                              Times:
+                                              {t('speedtest:times')}:
                                             </span>{" "}
                                             <span className="text-blue-600 dark:text-blue-400">
                                               {schedule.interval
@@ -887,10 +886,10 @@ export default function ScheduleManager({ servers, selectedServers, testType }: 
                                         )}
                                       <p className="text-gray-600 dark:text-gray-400 text-xs pt-2">
                                         <span className="font-normal">
-                                          Next run in:
+                                          {t('speedtest:next_run_in')}:
                                         </span>{" "}
                                         <span className="font-medium text-blue-600 dark:text-blue-400">
-                                          {schedule.nextRun ? formatNextRun(schedule.nextRun) : "Calculating..."}
+                                          {schedule.nextRun ? formatNextRun(schedule.nextRun) : t('speedtest:calculating')}
                                         </span>
                                       </p>
                                     </div>

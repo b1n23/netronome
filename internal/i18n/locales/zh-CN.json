@@ -1,0 +1,20 @@
+{
+  "error.internal": "内部服务器错误",
+  "error.not_found": "未找到资源",
+  "error.unauthorized": "未授权",
+  "error.forbidden": "禁止访问",
+  "error.bad_request": "错误的请求",
+  "error.validation": "验证错误",
+  "error.database": "数据库错误",
+  "error.network": "网络错误",
+  "auth.invalid_credentials": "用户名或密码无效",
+  "auth.token_expired": "身份验证令牌已过期",
+  "auth.missing_token": "需要身份验证令牌",
+  "speedtest.started": "速度测试已启动",
+  "speedtest.completed": "速度测试已完成",
+  "speedtest.failed": "速度测试失败：%s",
+  "monitor.agent_offline": "代理 '%s' 已离线",
+  "monitor.agent_online": "代理 '%s' 现已上线",
+  "notification.test": "来自 Netronome 的测试通知",
+  "notification.speedtest_threshold": "速度测试阈值已超过：%s"
+}

@@ -295,6 +295,9 @@ func (s *Server) RegisterRoutes() {
 
 			protected.GET("/settings/dashboard", s.handleGetDashboardSettings)
 			protected.PUT("/settings/dashboard", s.handleUpdateDashboardSettings)
+
+			protected.GET("/settings/language", s.handleGetLanguageSettings)
+			protected.PUT("/settings/language", s.handleUpdateLanguageSettings)
 		}
 	}
 

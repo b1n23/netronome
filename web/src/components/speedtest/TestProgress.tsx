@@ -4,6 +4,7 @@
  */
 
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "motion/react";
 import { TestProgress as TestProgressType } from "@/types/types";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
@@ -13,6 +14,8 @@ interface TestProgressProps {
 }
 
 export const TestProgress: React.FC<TestProgressProps> = ({ progress }) => {
+  const { t } = useTranslation();
+  
   // Determine what content to show
   const getContent = () => {
     // If no progress, return null
@@ -125,11 +128,11 @@ export const TestProgress: React.FC<TestProgressProps> = ({ progress }) => {
     if (!progress) return "";
     switch (progress.type) {
       case "download":
-        return "Download Test";
+        return t('speedtest:download_test');
       case "upload":
-        return "Upload Test";
+        return t('speedtest:upload_test');
       case "ping":
-        return "Latency Test";
+        return t('speedtest:latency_test');
       default:
         return progress.currentTest;
     }

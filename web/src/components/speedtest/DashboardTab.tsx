@@ -6,6 +6,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import { ColumnDef } from "@tanstack/react-table";
 import { SpeedTestResult, TimeRange } from "@/types/types";
@@ -169,16 +170,19 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
   onNavigateToSpeedTest,
   onNavigateToVnstat,
 }) => {
+  const { t, i18n } = useTranslation();
+  console.log('Current language:', i18n.language);
+  console.log('Test translation:', t('speedtest:no_history'));
   const { settings } = useTimeSettings();
   const [displayCount, setDisplayCount] = useState(recentSpeedtestsRows);
   const [isRecentTestsOpen, setIsRecentTestsOpen] = useState(() => {
     const saved = localStorage.getItem("recent-tests-open");
     return saved === null ? true : saved === "true";
   });
-  const columns = useMemo(() => getSpeedTestColumns(settings), [settings]);
+  const columns = useMemo(() => getSpeedTestColumns(settings, t), [settings, t]);
   const mobileColumns = useMemo(
-    () => getSpeedTestMobileColumns(settings),
-    [settings]
+    () => getSpeedTestMobileColumns(settings, t),
+    [settings, t]
   );
 
   // Initialize section order from localStorage or default
@@ -240,7 +244,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
 
   const calculateAverage = (field: keyof SpeedTestResult): string => {
     const dataToUse = filteredDisplayTests.length > 0 ? filteredDisplayTests : tests;
-    if (dataToUse.length === 0) return "N/A";
+    if (dataToUse.length === 0) return t('speedtest:n_a', 'N/A');
 
     const validValues = dataToUse
       .map((test) => {
@@ -252,7 +256,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
       })
       .filter((value) => !isNaN(value));
 
-    if (validValues.length === 0) return "N/A";
+    if (validValues.length === 0) return t('speedtest:n_a', 'N/A');
 
     const avg =
       validValues.reduce((sum, value) => sum + value, 0) / validValues.length;
@@ -279,10 +283,10 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           <div className="text-center space-y-3 sm:space-y-4">
             <div>
               <h2 className="text-gray-900 dark:text-white text-lg sm:text-xl font-semibold mb-1 sm:mb-2">
-                No History Available
+                {t('speedtest:no_history', 'No History Available')}
               </h2>
               <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Start monitoring your network performance
+                {t('speedtest:start_monitoring', 'Start monitoring your network performance')}
               </p>
             </div>
 
@@ -302,15 +306,15 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
 
             <div className="max-w-md mx-auto">
               <p className="text-gray-600 dark:text-gray-400 text-sm">
-                Go to the{" "}
+                {t('speedtest:go_to_test', 'Go to the')}{" "}
                 <button
                   onClick={onNavigateToSpeedTest}
                   className="inline-flex items-center mx-1 px-3 py-2 sm:px-2 sm:py-1 min-h-[44px] sm:min-h-0 rounded-lg transition-colors text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20 touch-manipulation"
                   disabled={!onNavigateToSpeedTest}
                 >
-                  Speed Test tab
+                  {t('speedtest:speed_test_tab', 'Speed Test tab')}
                 </button>{" "}
-                to run manual tests or set up automated schedules
+                {t('speedtest:to_run_tests', 'to run manual tests or set up automated schedules')}
               </p>
             </div>
           </div>
@@ -337,42 +341,42 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
               isPublic && "sm:pt-6"
             )}
           >
-            Latest Run
+            {t('speedtest:latest_run', 'Latest Run')}
           </h2>
           <div className="flex justify-between ml-1 items-center text-gray-600 dark:text-gray-400 text-sm mb-4">
             <div>
-              Last test run:{" "}
+              {t('speedtest:last_test_run', 'Last test run')}:{" "}
               {latestTest?.createdAt
                 ? formatDateTimeWithSettings(latestTest.createdAt, settings)
-                : "N/A"}
+                : t('speedtest:n_a', 'N/A')}
             </div>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-6 cursor-default relative">
             <MetricCard
               icon={<IoIosPulse className="w-5 h-5 text-amber-500" />}
-              title="Latency"
+              title={t('speedtest:latency')}
               value={parseFloat((filteredLatestTestComputed || latestTest)!.latency).toFixed(2)}
               unit="ms"
               average={calculateAverage("latency")}
             />
             <MetricCard
               icon={<FaArrowDown className="w-5 h-5 text-blue-500" />}
-              title="Download"
+              title={t('speedtest:download')}
               value={(filteredLatestTestComputed || latestTest)!.downloadSpeed.toFixed(2)}
               unit="Mbps"
               average={calculateAverage("downloadSpeed")}
             />
             <MetricCard
               icon={<FaArrowUp className="w-5 h-5 text-emerald-500" />}
-              title="Upload"
+              title={t('speedtest:upload')}
               value={(filteredLatestTestComputed || latestTest)!.uploadSpeed.toFixed(2)}
               unit="Mbps"
               average={calculateAverage("uploadSpeed")}
             />
             <MetricCard
               icon={<FaWaveSquare className="w-5 h-5 text-purple-400" />}
-              title="Jitter"
-              value={(filteredLatestTestComputed || latestTest)!.jitter?.toFixed(2) ?? "N/A"}
+              title={t('speedtest:jitter')}
+              value={(filteredLatestTestComputed || latestTest)!.jitter?.toFixed(2) ?? t('speedtest:n_a', 'N/A')}
               unit="ms"
               average={
                 (filteredLatestTestComputed || latestTest)!.jitter !== null &&
@@ -392,7 +396,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                       onMouseEnter={() => setIsShareHovered(true)}
                       onMouseLeave={() => setIsShareHovered(false)}
                       className="relative p-2 min-w-[36px] min-h-[36px] text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 z-10 opacity-60 hover:opacity-100 touch-manipulation flex items-center justify-center"
-                      aria-label="Share public speed test page"
+                      aria-label={t('speedtest:share_page')}
                       whileTap={{ scale: 0.9 }}
                       transition={{ duration: 0.2 }}
                     >
@@ -503,6 +507,8 @@ const DraggableRecentSpeedtests: React.FC<DraggableRecentSpeedtestsProps> = ({
   dragHandleListeners,
   dragHandleClassName,
 }) => {
+  const { t } = useTranslation();
+  
   return (
     <div className="shadow-lg rounded-xl overflow-hidden">
       <Collapsible
@@ -531,7 +537,7 @@ const DraggableRecentSpeedtests: React.FC<DraggableRecentSpeedtestsProps> = ({
               <FaGripVertical className="w-4 h-4 text-gray-400 dark:text-gray-600" />
             </div>
             <h2 className="text-gray-900 dark:text-white text-lg sm:text-xl font-semibold p-1 select-none">
-              Recent Speedtests
+              {t('speedtest:recent_speedtests')}
             </h2>
           </div>
           <div className="p-1 -m-1">
@@ -566,7 +572,7 @@ const DraggableRecentSpeedtests: React.FC<DraggableRecentSpeedtestsProps> = ({
                 showColumnVisibility={true}
                 showRowSelection={false}
                 filterColumn="serverName"
-                filterPlaceholder="Filter by server..."
+                filterPlaceholder={t('speedtest:filter_by_server')}
                 className="-mt-4"
               />
             </div>
@@ -591,7 +597,7 @@ const DraggableRecentSpeedtests: React.FC<DraggableRecentSpeedtestsProps> = ({
                 {/* Test Count */}
                 <div className="text-center">
                   <span className="text-gray-500 dark:text-gray-500 text-xs sm:text-sm">
-                    Showing {displayedTests.length} of {tests.length} tests
+                    {t('speedtest:showing_tests', { showing: displayedTests.length, total: tests.length })}
                   </span>
                 </div>
 
@@ -602,7 +608,7 @@ const DraggableRecentSpeedtests: React.FC<DraggableRecentSpeedtestsProps> = ({
                       onClick={() => setDisplayCount((prev) => prev + 5)}
                       className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-3 sm:py-2 min-h-[44px] sm:min-h-0 bg-blue-600/10 hover:bg-blue-600/20 text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 rounded-lg transition-colors duration-200 text-sm font-medium touch-manipulation border border-blue-500/20 hover:border-blue-600/50"
                     >
-                      Load {Math.min(5, tests.length - displayCount)} more
+                      {t('speedtest:load_x_more', { count: Math.min(5, tests.length - displayCount) })}
                       <span className="ml-2">↓</span>
                     </button>
                   )}
@@ -612,7 +618,7 @@ const DraggableRecentSpeedtests: React.FC<DraggableRecentSpeedtestsProps> = ({
                       onClick={() => setDisplayCount(defaultDisplayCount)}
                       className="inline-flex items-center justify-center w-full sm:w-auto px-4 py-3 sm:py-2 min-h-[44px] sm:min-h-0 bg-gray-600/10 hover:bg-gray-600/20 text-gray-600 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 rounded-lg transition-colors duration-200 text-sm font-medium touch-manipulation"
                     >
-                      Show less
+                      {t('speedtest:show_less')}
                       <span className="ml-2">↑</span>
                     </button>
                   )}

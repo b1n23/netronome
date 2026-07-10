@@ -4,6 +4,7 @@
  */
 
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { motion } from "motion/react";
 import {
   ServerIcon,
@@ -114,6 +115,7 @@ const FeaturedAgentCard: React.FC<FeaturedAgentCardProps> = ({
   onOpenModal,
   onNavigateToAgent,
 }) => {
+  const { t } = useTranslation();
   // Use the shared hook for agent data
   const { status, nativeData, hardwareStats } = useMonitorAgent({
     agent,
@@ -263,7 +265,7 @@ const FeaturedAgentCard: React.FC<FeaturedAgentCardProps> = ({
         <div className="text-center py-8">
           <ServerIcon className="h-8 w-8 text-gray-400 mx-auto" />
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            {status?.connected === false ? "Disconnected" : "No data"}
+            {status?.connected === false ? t('monitor:disconnected') : t('monitor:no_data')}
           </p>
         </div>
       )}

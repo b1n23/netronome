@@ -1,0 +1,20 @@
+{
+  "error.internal": "Internal server error",
+  "error.not_found": "Resource not found",
+  "error.unauthorized": "Unauthorized",
+  "error.forbidden": "Forbidden",
+  "error.bad_request": "Bad request",
+  "error.validation": "Validation error",
+  "error.database": "Database error",
+  "error.network": "Network error",
+  "auth.invalid_credentials": "Invalid username or password",
+  "auth.token_expired": "Authentication token expired",
+  "auth.missing_token": "Authentication token required",
+  "speedtest.started": "Speed test started",
+  "speedtest.completed": "Speed test completed",
+  "speedtest.failed": "Speed test failed: %s",
+  "monitor.agent_offline": "Agent '%s' is offline",
+  "monitor.agent_online": "Agent '%s' is now online",
+  "notification.test": "Test notification from Netronome",
+  "notification.speedtest_threshold": "Speed test threshold exceeded: %s"
+}

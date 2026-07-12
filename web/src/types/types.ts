@@ -97,6 +97,7 @@ export interface TestOptions {
 }
 
 export interface ScheduledTest {
+  // Scheduled test configuration
 }
 
 export type TimeRange = "1d" | "3d" | "1w" | "1m" | "all";

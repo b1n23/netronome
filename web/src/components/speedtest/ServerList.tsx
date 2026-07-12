@@ -273,30 +273,7 @@ export const ServerList: React.FC<ServerListProps> = ({
     }
   };
 
-  // Fetch saved iperf servers when component mounts or iperf mode changes
-  useEffect(() => {
-    if (testType === "iperf") {
-      fetchSavedIperfServers().catch((error) => {
-        console.error("Failed to fetch iperf servers:", error);
-        showToast("Failed to load iperf servers", "error", {
-          description: error instanceof Error ? error.message : "Unknown error",
-        });
-      });
-    }
-  }, [testType]); // Re-run when useIperf changes
-
   // Fetch URL download servers when testType is url_download
-  useEffect(() => {
-    if (testType === "url_download") {
-      fetchUrlDownloadServers().catch((error) => {
-        console.error("Failed to fetch URL download servers:", error);
-        showToast("Failed to load URL download servers", "error", {
-          description: error instanceof Error ? error.message : "Unknown error",
-        });
-      });
-    }
-  }, [testType]);
-
   const fetchUrlDownloadServers = async () => {
     try {
       const response = await fetch(getApiUrl("/servers?testType=url_download"));
@@ -313,6 +290,25 @@ export const ServerList: React.FC<ServerListProps> = ({
       throw error;
     }
   };
+
+  useEffect(() => {
+    if (testType === "iperf") {
+      fetchSavedIperfServers().catch((error) => {
+        console.error("Failed to fetch iperf servers:", error);
+        showToast("Failed to load iperf servers", "error", {
+          description: error instanceof Error ? error.message : "Unknown error",
+        });
+      });
+    }
+    if (testType === "url_download") {
+      fetchUrlDownloadServers().catch((error) => {
+        console.error("Failed to fetch URL download servers:", error);
+        showToast("Failed to load URL download servers", "error", {
+          description: error instanceof Error ? error.message : "Unknown error",
+        });
+      });
+    }
+  }, [testType]); // Re-run when testType changes
 
   // Update filterCountry logic to handle select component values
   const filteredServersWithSelect = useMemo(() => {

@@ -314,7 +314,7 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
   };
 
   // Function to render individual server charts for separate mode
-  const renderServerChart = (serverName: string, serverData: any[]) => {
+  const renderServerChart = (serverName: string, serverData: SpeedTestResult[]) => {
     return (
       <div key={`server-${serverName}`} className="mb-6">
         <div className="mb-2">
@@ -525,7 +525,7 @@ export const SpeedHistoryChart: React.FC<SpeedHistoryChartProps> = ({
   const renderChartsBasedOnMode = () => {
     if (serverFilterMode === "multiple" && selectedMultipleServers.size > 1 && multipleServerDisplayMode === "separate") {
       // Group processed data by server for separate charts
-      const serverGroups: { [key: string]: any[] } = {};
+      const serverGroups: { [key: string]: SpeedTestResult[] } = {};
       
       // allResults is already filtered for selected multiple servers
       allResults.forEach(result => {
